@@ -8,11 +8,11 @@ const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfa
 export const metadata: Metadata = {
   title: "Verbo da Vida Braga | Igreja Cristã",
   description:
-    "Uma igreja acolhedora em Braga com cultos semanais, eventos e acompanhamento pastoral.",
+    "Uma igreja em Braga conectada ao Ministério Verbo da Vida, com foco em Palavra, fé e amor.",
   metadataBase: new URL("https://verbodavida-braga.vercel.app"),
   openGraph: {
     title: "Verbo da Vida Braga",
-    description: "Conheça a igreja, agenda e departamentos da Verbo da Vida Braga.",
+    description: "Conheça a história, propósito e departamentos da Verbo da Vida Braga.",
     type: "website"
   }
 };
