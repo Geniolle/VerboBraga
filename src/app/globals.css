@@ -30,6 +30,21 @@ a {
   @apply transition-colors;
 }
 
+@keyframes float-in {
+  0% {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-float-in {
+  animation: float-in 0.5s ease-out both;
+}
+
 section {
   scroll-margin-top: 80px;
 }
