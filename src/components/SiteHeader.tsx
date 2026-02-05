@@ -1,4 +1,7 @@
+\"use client\";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 
 const navItems = [
@@ -46,6 +49,8 @@ const navItems = [
 ];
 
 export function SiteHeader() {
+  const pathname = usePathname();
+
   return (
     <header className="fixed left-0 right-0 top-0 z-40 border-b border-white/40 bg-white/85 backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/80">
       <div className="mx-auto flex w-full max-w-6xl items-center gap-4 px-4 py-4 sm:px-6">
@@ -74,16 +79,25 @@ export function SiteHeader() {
       <nav className="md:hidden">
         <div className="fixed bottom-4 left-4 right-4 z-40 animate-float-in rounded-2xl border border-white/60 bg-white/90 px-4 py-3 shadow-soft backdrop-blur dark:border-slate-800/70 dark:bg-slate-950/90">
           <div className="flex items-center justify-between text-[11px] font-semibold text-slate-700 dark:text-slate-200">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="flex flex-1 flex-col items-center gap-1 rounded-xl px-2 py-1 transition hover:text-brand-indigo"
-              >
-                <span className="text-brand-indigo">{item.icon}</span>
-                <span>{item.label}</span>
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex flex-1 flex-col items-center gap-1 rounded-xl px-2 py-1 transition ${
+                    isActive ? "text-brand-indigo" : "hover:text-brand-indigo"
+                  }`}
+                >
+                  <span
+                    className={`text-brand-indigo ${isActive ? "text-[22px]" : "text-[26px]"}`}
+                  >
+                    {item.icon}
+                  </span>
+                  {isActive ? <span className="text-[11px]">{item.label}</span> : null}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </nav>
