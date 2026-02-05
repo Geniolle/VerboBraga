@@ -10,7 +10,7 @@ const navItems = [
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-white/40 bg-white/80 backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/80">
+    <header className="fixed left-0 right-0 top-0 z-40 border-b border-white/40 bg-white/80 backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/80">
       <div className="mx-auto flex w-full max-w-6xl items-center gap-4 px-4 py-4 sm:px-6">
         <Link href="/" className="text-lg font-semibold tracking-wide text-brand-indigo">
           Verbo da Vida Braga
