@@ -6,14 +6,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        "brand-sky": "#F2F6FF",
-        "brand-lavender": "#F7F9FF",
-        "brand-indigo": "#4DA3FF",
+        "brand-sky": "#EEF6FF",
+        "brand-lavender": "#F8FAFF",
+        "brand-indigo": "#5AB0FF",
         "brand-gold": "#D9B36C",
-        "brand-sage": "#E6E9EF"
+        "brand-sage": "#E6E9EF",
+        "brand-ink": "#0F1C3F"
       },
       boxShadow: {
-        soft: "0 10px 30px rgba(15, 23, 42, 0.12)"
+        soft: "0 20px 50px rgba(15, 23, 42, 0.12)"
+      },
+      fontFamily: {
+        sans: ["var(--font-sora)", "ui-sans-serif", "system-ui", "sans-serif"],
+        serif: ["var(--font-instrument)", "ui-serif", "Georgia", "serif"]
       }
     }
   },

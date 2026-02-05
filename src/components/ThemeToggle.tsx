@@ -26,7 +26,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white/80 text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-200"
+      className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white/80 text-brand-indigo shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-900/80 dark:text-brand-indigo"
       aria-pressed={isDark}
       aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
       title={isDark ? "Ativar modo claro" : "Ativar modo escuro"}

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Instrument_Serif, Sora } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
+const sora = Sora({ subsets: ["latin"], variable: "--font-sora" });
+const instrument = Instrument_Serif({ subsets: ["latin"], variable: "--font-instrument" });
 
 export const metadata: Metadata = {
   title: "Verbo da Vida Braga | Igreja Cristã",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="pt-BR" className={`${sora.variable} ${instrument.variable}`}>
       <body className="min-h-screen bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
         {children}
       </body>

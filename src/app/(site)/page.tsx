@@ -13,7 +13,7 @@ export default function QuemSomos() {
       <AnimatedSection>
         <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="space-y-6">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-gold">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-indigo">
               Quem somos
             </p>
             <h1 className="text-4xl font-semibold leading-tight text-slate-900 dark:text-white sm:text-5xl">

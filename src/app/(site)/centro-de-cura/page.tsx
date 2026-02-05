@@ -11,7 +11,7 @@ export default function CentroDeCura() {
     <>
       <AnimatedSection>
         <div className="space-y-4">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-gold">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-indigo">
             Centro de Cura
           </p>
           <h1 className="text-4xl font-semibold leading-tight text-slate-900 dark:text-white sm:text-5xl">

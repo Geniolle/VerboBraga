@@ -13,10 +13,21 @@ html {
 body {
   @apply bg-white text-slate-900 antialiased;
   font-feature-settings: "liga" 1, "kern" 1;
+  font-family: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
 }
 
 body.dark {
   @apply bg-slate-900 text-slate-100;
+}
+
+h1,
+h2,
+h3 {
+  @apply font-serif tracking-tight text-brand-ink dark:text-white;
+}
+
+a {
+  @apply transition-colors;
 }
 
 section {
