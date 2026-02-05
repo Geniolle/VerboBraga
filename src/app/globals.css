@@ -13,7 +13,7 @@ html {
 body {
   @apply bg-white text-slate-900 antialiased;
   font-feature-settings: "liga" 1, "kern" 1;
-  font-family: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 body.dark {
@@ -23,7 +23,7 @@ body.dark {
 h1,
 h2,
 h3 {
-  @apply font-serif tracking-tight text-brand-ink dark:text-white;
+  @apply font-display font-bold tracking-tight text-brand-ink dark:text-white;
 }
 
 a {

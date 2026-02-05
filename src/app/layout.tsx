@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Sora } from "next/font/google";
+import { Manrope, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
-const sora = Sora({ subsets: ["latin"], variable: "--font-sora" });
-const instrument = Instrument_Serif({ subsets: ["latin"], variable: "--font-instrument" });
+const manrope = Manrope({ subsets: ["latin"], variable: "--font-sans" });
+const space = Space_Grotesk({ subsets: ["latin"], variable: "--font-display" });
 
 export const metadata: Metadata = {
   title: "Verbo da Vida Braga | Igreja Cristã",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${sora.variable} ${instrument.variable}`}>
+    <html lang="pt-BR" className={`${manrope.variable} ${space.variable}`}>
       <body className="min-h-screen bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
         {children}
       </body>

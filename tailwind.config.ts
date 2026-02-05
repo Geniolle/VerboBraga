@@ -17,8 +17,8 @@ const config: Config = {
         soft: "0 20px 50px rgba(15, 23, 42, 0.12)"
       },
       fontFamily: {
-        sans: ["var(--font-sora)", "ui-sans-serif", "system-ui", "sans-serif"],
-        serif: ["var(--font-instrument)", "ui-serif", "Georgia", "serif"]
+        sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "ui-sans-serif", "system-ui", "sans-serif"]
       }
     }
   },
