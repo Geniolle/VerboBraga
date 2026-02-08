@@ -2,17 +2,20 @@ import React from "react"
 import type { Metadata } from 'next'
 import { AdminSidebar } from '@/components/admin/sidebar'
 import { AdminHeader } from '@/components/admin/header'
+import { requireAdminUser } from '@/lib/auth-server'
 
 export const metadata: Metadata = {
   title: 'Admin Dashboard - Verbo da Vida',
   description: 'Dashboard administrativo da Igreja Verbo da Vida',
 }
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  await requireAdminUser()
+
   return (
     <div className="flex h-screen bg-background">
       <AdminSidebar />

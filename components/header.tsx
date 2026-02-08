@@ -7,6 +7,7 @@ import { Menu, X } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
+import { AuthMenu } from '@/components/auth/auth-menu'
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
@@ -41,8 +42,8 @@ export function Header() {
           </motion.div>
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden gap-8 md:flex">
+        <div className="hidden items-center gap-4 md:flex">
+          <nav className="flex gap-8">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -52,16 +53,20 @@ export function Header() {
               {item.label}
             </Link>
           ))}
-        </nav>
+          </nav>
+          <AuthMenu />
+        </div>
 
         {/* Mobile Menu Button */}
-        <button
-          className="md:hidden"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle menu"
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <AuthMenu />
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Navigation */}

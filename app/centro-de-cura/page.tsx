@@ -62,7 +62,7 @@ export default function CentroDeCuraPage() {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-lg bg-green-600 px-6 py-3 font-semibold text-white transition hover:bg-green-700"
             >
-              Conversar com +351 913 489 133 no WhatsApp
+              Conversar com responsável no WhatsApp
             </a>
           </div>
         </div>
