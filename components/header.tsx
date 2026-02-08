@@ -15,6 +15,8 @@ export function Header() {
     { label: 'Início', href: '/' },
     { label: 'Sobre', href: '/about' },
     { label: 'Departamentos', href: '/services' },
+    { label: 'Jovens', href: '/jovens' },
+    { label: 'Centro de Cura', href: '/centro-de-cura' },
     { label: 'Programação', href: '/events' },
     { label: 'Localização', href: '/location' },
   ]
