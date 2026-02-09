@@ -1,6 +1,7 @@
 import React from "react"
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { GsapRouteTransition } from '@/components/gsap-route-transition'
 
 import './globals.css'
 
@@ -33,7 +34,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <GsapRouteTransition>{children}</GsapRouteTransition>
+      </body>
     </html>
   )
 }
