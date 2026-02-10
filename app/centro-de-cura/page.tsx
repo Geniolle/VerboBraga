@@ -2,6 +2,7 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import FloatingWhatsApp from '@/components/floating-whatsapp'
 import Link from 'next/link'
+import { FormularioEntryButton } from '@/components/centro-de-cura/formulario-entry-button'
 
 const whatsappText =
   'Ola. Quero participar da proxima edicao do centro de cura. Como devo fazer?'
@@ -26,12 +27,7 @@ export default function CentroDeCuraPage() {
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/centro-de-cura/formulario"
-              className="inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
-            >
-              Formulario de Inscricao
-            </Link>
+            <FormularioEntryButton />
             <a
               href="https://www.instagram.com/centrodecurarhemabraga/"
               target="_blank"

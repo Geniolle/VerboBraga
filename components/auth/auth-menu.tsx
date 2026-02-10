@@ -44,6 +44,18 @@ export function AuthMenu() {
     setOpen(true)
   }, [me.user])
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    function handleOpenAuthLogin() {
+      if (me.user) return
+      setOpen(true)
+    }
+
+    window.addEventListener('open-auth-login', handleOpenAuthLogin)
+    return () => window.removeEventListener('open-auth-login', handleOpenAuthLogin)
+  }, [me.user])
+
   async function createSessionFromIdToken(idToken: string) {
     const res = await fetch('/api/auth/session', {
       method: 'POST',
