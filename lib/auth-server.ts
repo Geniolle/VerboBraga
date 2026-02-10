@@ -29,9 +29,9 @@ export async function getServerUser(): Promise<ServerUser | null> {
   }
 }
 
-export async function requireServerUser() {
+export async function requireServerUser(redirectTo = '/') {
   const user = await getServerUser()
-  if (!user) redirect('/')
+  if (!user) redirect(redirectTo)
   return user
 }
 

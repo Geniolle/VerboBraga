@@ -5,7 +5,7 @@ import { requireServerUser } from '@/lib/auth-server'
 import { CuraForm } from '@/components/centro-de-cura/cura-form'
 
 export default async function CentroDeCuraFormularioPage() {
-  await requireServerUser()
+  await requireServerUser('/?openLogin=1')
 
   return (
     <main className="w-full">

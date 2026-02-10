@@ -34,6 +34,22 @@ export function AuthMenu() {
     refreshMe()
   }, [])
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('openLogin') !== '1') return
+    if (me.user) return
+
+    setOpen(true)
+    params.delete('openLogin')
+    const query = params.toString()
+    const nextUrl = query
+      ? `${window.location.pathname}?${query}${window.location.hash}`
+      : `${window.location.pathname}${window.location.hash}`
+    window.history.replaceState({}, '', nextUrl)
+  }, [me.user])
+
   async function createSessionFromIdToken(idToken: string) {
     const res = await fetch('/api/auth/session', {
       method: 'POST',
