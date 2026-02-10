@@ -11,7 +11,11 @@ export function proxy(req: NextRequest) {
   const sessionCookie = req.cookies.get('session')?.value
 
   if (!sessionCookie) {
-    return NextResponse.redirect(new URL('/', req.url))
+    const url = new URL('/', req.url)
+    if (path === '/centro-de-cura/formulario' || path.startsWith('/centro-de-cura/formulario/')) {
+      url.searchParams.set('openLogin', '1')
+    }
+    return NextResponse.redirect(url)
   }
 
   return NextResponse.next()
