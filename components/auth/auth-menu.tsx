@@ -42,12 +42,6 @@ export function AuthMenu() {
     if (me.user) return
 
     setOpen(true)
-    params.delete('openLogin')
-    const query = params.toString()
-    const nextUrl = query
-      ? `${window.location.pathname}?${query}${window.location.hash}`
-      : `${window.location.pathname}${window.location.hash}`
-    window.history.replaceState({}, '', nextUrl)
   }, [me.user])
 
   async function createSessionFromIdToken(idToken: string) {
