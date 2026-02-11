@@ -253,7 +253,7 @@ export async function getChurchTablePreview(
   limit = 100
 ): Promise<ChurchTablePreview | null> {
   if (!db) return null
-  if (!/^[a-z0-9_]+$/.test(tableName) || !tableName.startsWith('igreja_')) return null
+  if (!tableName || tableName.length > 200) return null
   const exists = await tableExists(tableName)
   if (!exists) return null
 

@@ -1,19 +1,58 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import FloatingWhatsApp from '@/components/floating-whatsapp'
 import { requireChurchUser } from '@/lib/auth-server'
 import { getChurchTablePreview } from '@/lib/church-db'
+import { getUserAccess } from '@/lib/db'
+import { getChurchTabByTableForUser } from '@/lib/church-permissions'
 
 export default async function IgrejaTabelaPage({
   params,
 }: {
   params: Promise<{ table: string }>
 }) {
-  await requireChurchUser('/?openLogin=1')
-  const { table } = await params
-  const preview = await getChurchTablePreview(table, 100)
+  const user = await requireChurchUser('/?openLogin=1')
+  const access = await getUserAccess(user.uid)
+  const { table: rawTable } = await params
+  const table = decodeURIComponent(rawTable)
+
+  const tab = await getChurchTabByTableForUser(table, user.email, access.isAdmin)
+
+  if (!tab || !tab.canView) {
+    redirect('/igreja')
+  }
+
+  if (!tab.tableExists || !tab.tableName) {
+    return (
+      <main className="w-full">
+        <Header />
+
+        <section className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 py-10">
+          <div className="container mx-auto space-y-6 px-4">
+            <div className="rounded-lg border border-border bg-card p-6">
+              <h1 className="text-2xl font-bold">{tab.title}</h1>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Esta aba está permitida para você, mas a tabela ainda não foi encontrada no banco.
+              </p>
+              <Link
+                href="/igreja"
+                className="mt-4 inline-flex items-center justify-center rounded-lg border border-border px-4 py-2 text-sm font-medium hover:border-primary"
+              >
+                Voltar ao Painel Igreja
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <Footer />
+        <FloatingWhatsApp />
+      </main>
+    )
+  }
+
+  const preview = await getChurchTablePreview(tab.tableName, 100)
 
   if (!preview) notFound()
 
@@ -26,9 +65,9 @@ export default async function IgrejaTabelaPage({
           <div className="rounded-lg border border-border bg-card p-6">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
-                <h1 className="text-2xl font-bold">{table}</h1>
+                <h1 className="text-2xl font-bold">{tab.title}</h1>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Visualizando as primeiras 100 linhas. Total de linhas: {preview.totalRows}
+                  Tabela: {tab.tableName} • Visualizando as primeiras 100 linhas. Total: {preview.totalRows}
                 </p>
               </div>
               <Link

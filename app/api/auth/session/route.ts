@@ -27,8 +27,8 @@ export async function POST(req: NextRequest) {
           VALUES ($1, $2, 'user', $3, $4)
           ON CONFLICT (uid) DO UPDATE SET
             email = EXCLUDED.email,
-            is_colaborador = app_users.is_colaborador OR EXCLUDED.is_colaborador,
-            is_membresia = app_users.is_membresia OR EXCLUDED.is_membresia
+            is_colaborador = EXCLUDED.is_colaborador,
+            is_membresia = EXCLUDED.is_membresia
         `,
         [
           decoded.uid,

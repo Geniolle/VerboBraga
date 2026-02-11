@@ -3,13 +3,19 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import FloatingWhatsApp from '@/components/floating-whatsapp'
 import { requireChurchUser } from '@/lib/auth-server'
-import { getChurchDashboardData } from '@/lib/church-db'
+import { getUserAccess } from '@/lib/db'
+import { getChurchTabsForUser } from '@/lib/church-permissions'
 
 export default async function IgrejaPage() {
-  await requireChurchUser('/?openLogin=1')
-  const data = await getChurchDashboardData()
+  const user = await requireChurchUser('/?openLogin=1')
+  const access = await getUserAccess(user.uid)
+  const tabs = await getChurchTabsForUser(user.email, access.isAdmin)
 
-  const hasData = data.tables.length > 0
+  const totalTabs = tabs.length
+  const allowedTabs = tabs.filter((tab) => tab.canView)
+  const blockedTabs = tabs.filter((tab) => !tab.canView)
+  const connectedTabs = tabs.filter((tab) => tab.canView && tab.tableExists)
+  const missingTables = tabs.filter((tab) => tab.canView && !tab.tableExists)
 
   return (
     <main className="w-full">
@@ -20,192 +26,93 @@ export default async function IgrejaPage() {
           <div className="rounded-lg border border-border bg-card p-6">
             <h1 className="text-3xl font-bold text-foreground">Painel Igreja</h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Área para colaboradores e membresia com os dados migrados do AppSheet.
+              Abas e permissões baseadas na tabela <code>igreja_bp_autority</code>.
             </p>
 
             <div className="mt-4 grid gap-4 md:grid-cols-4">
               <div className="rounded-lg border border-border bg-background p-4">
-                <p className="text-xs text-muted-foreground">Tabelas migradas</p>
-                <p className="text-2xl font-bold">{data.metrics.tableCount}</p>
+                <p className="text-xs text-muted-foreground">Total de abas</p>
+                <p className="text-2xl font-bold">{totalTabs}</p>
               </div>
               <div className="rounded-lg border border-border bg-background p-4">
-                <p className="text-xs text-muted-foreground">Linhas estimadas</p>
-                <p className="text-2xl font-bold">{data.metrics.rowEstimate}</p>
+                <p className="text-xs text-muted-foreground">Abas permitidas</p>
+                <p className="text-2xl font-bold">{allowedTabs.length}</p>
               </div>
               <div className="rounded-lg border border-border bg-background p-4">
-                <p className="text-xs text-muted-foreground">Média membresia</p>
-                <p className="text-2xl font-bold">{data.metrics.mediaMembresia}</p>
+                <p className="text-xs text-muted-foreground">Sem permissão</p>
+                <p className="text-2xl font-bold">{blockedTabs.length}</p>
               </div>
               <div className="rounded-lg border border-border bg-background p-4">
-                <p className="text-xs text-muted-foreground">Média visitantes</p>
-                <p className="text-2xl font-bold">{data.metrics.mediaVisitantes}</p>
+                <p className="text-xs text-muted-foreground">Com tabela ligada</p>
+                <p className="text-2xl font-bold">{connectedTabs.length}</p>
               </div>
             </div>
           </div>
 
-          {!hasData && (
+          {missingTables.length > 0 && (
             <div className="rounded-lg border border-border bg-card p-6">
               <p className="text-sm text-muted-foreground">
-                Ainda não existem tabelas `igreja_*` no Postgres. Rode `npm run db:import-igreja`
-                para concluir a transição da base `appantigo/xls`.
+                {missingTables.length} aba(s) permitida(s) ainda não encontrou tabela equivalente no
+                Postgres. Se já existir no banco com outro nome, eu ajusto o mapeamento.
               </p>
             </div>
           )}
 
-          {hasData && (
-            <>
-              <div className="rounded-lg border border-border bg-card p-6">
-                <h2 className="text-xl font-semibold">Agenda de Departamentos</h2>
-                <div className="mt-4 overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-border text-left text-muted-foreground">
-                        <th className="px-2 py-2">Data</th>
-                        <th className="px-2 py-2">Hora</th>
-                        <th className="px-2 py-2">Título</th>
-                        <th className="px-2 py-2">Organizador</th>
-                        <th className="px-2 py-2">Local</th>
-                        <th className="px-2 py-2">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {data.agenda.map((item, index) => (
-                        <tr key={`${item.titulo}-${index}`} className="border-b border-border/60">
-                          <td className="px-2 py-2">{item.data || '-'}</td>
-                          <td className="px-2 py-2">{item.hora || '-'}</td>
-                          <td className="px-2 py-2">{item.titulo || '-'}</td>
-                          <td className="px-2 py-2">{item.organizador || '-'}</td>
-                          <td className="px-2 py-2">{item.local || '-'}</td>
-                          <td className="px-2 py-2">{item.status || '-'}</td>
-                        </tr>
-                      ))}
-                      {data.agenda.length === 0 && (
-                        <tr>
-                          <td className="px-2 py-3 text-muted-foreground" colSpan={6}>
-                            Sem dados na agenda.
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+          <div className="rounded-lg border border-border bg-card p-6">
+            <h2 className="text-xl font-semibold">Abas AppSheet</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              A visualização abaixo valida permissão por usuário usando <code>igreja_bp_autority</code>.
+            </p>
 
-              <div className="grid gap-6 lg:grid-cols-2">
-                <div className="rounded-lg border border-border bg-card p-6">
-                  <h2 className="text-xl font-semibold">Recados</h2>
-                  <div className="mt-4 space-y-3">
-                    {data.recados.map((recado) => (
-                      <div key={`${recado.id}-${recado.titulo}`} className="rounded-lg border border-border p-3">
-                        <p className="text-xs text-muted-foreground">ID {recado.id || '-'}</p>
-                        <p className="font-medium">{recado.titulo || '-'}</p>
-                        <p className="text-sm text-muted-foreground">{recado.detalhes || '-'}</p>
-                      </div>
-                    ))}
-                    {data.recados.length === 0 && (
-                      <p className="text-sm text-muted-foreground">Sem recados cadastrados.</p>
-                    )}
-                  </div>
-                </div>
+            <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+              {tabs.map((tab) => {
+                const isClickable = tab.canView && tab.tableExists && tab.tableName
+                const cardClass = tab.canView
+                  ? 'rounded-lg border border-border bg-background p-4'
+                  : 'rounded-lg border border-dashed border-border bg-muted/20 p-4 opacity-75'
 
-                <div className="rounded-lg border border-border bg-card p-6">
-                  <h2 className="text-xl font-semibold">Ranking de Músicas</h2>
-                  <div className="mt-4 space-y-2">
-                    {data.musicas.map((musica) => (
-                      <div
-                        key={musica.musica}
-                        className="flex items-center justify-between rounded-lg border border-border px-3 py-2"
+                const content = (
+                  <>
+                    <div className="flex items-start justify-between gap-3">
+                      <p className="text-sm font-semibold">{tab.title}</p>
+                      <span
+                        className={`rounded px-2 py-1 text-[10px] font-semibold ${
+                          tab.canView
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-red-100 text-red-700'
+                        }`}
                       >
-                        <span className="text-sm">{musica.musica}</span>
-                        <span className="text-sm font-semibold text-primary">{musica.repeticoes}</span>
-                      </div>
-                    ))}
-                    {data.musicas.length === 0 && (
-                      <p className="text-sm text-muted-foreground">Sem dados de músicas.</p>
-                    )}
-                  </div>
-                </div>
-              </div>
+                        {tab.canView ? 'Permitido' : 'Sem permissão'}
+                      </span>
+                    </div>
 
-              <div className="grid gap-6 lg:grid-cols-2">
-                <div className="rounded-lg border border-border bg-card p-6">
-                  <h2 className="text-xl font-semibold">Takeaway</h2>
-                  <div className="mt-4 space-y-3">
-                    {data.takeway.map((item, index) => (
-                      <div key={`${item.menu}-${index}`} className="rounded-lg border border-border p-3">
-                        <p className="font-medium">{item.menu || '-'}</p>
-                        <p className="text-sm text-muted-foreground">Data entrega: {item.dataEntrega || '-'}</p>
-                        <p className="text-sm text-muted-foreground">Status: {item.status || '-'}</p>
-                        <p className="text-sm text-muted-foreground">
-                          Destaque: {item.destaque || '-'} {item.preco ? `(${item.preco})` : ''}
-                        </p>
-                      </div>
-                    ))}
-                    {data.takeway.length === 0 && (
-                      <p className="text-sm text-muted-foreground">Sem dados de takeaway.</p>
-                    )}
-                  </div>
-                </div>
+                    <p className="mt-2 text-xs text-muted-foreground">{tab.columnsInfo}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Tabela: {tab.tableName ?? 'não encontrada'}
+                    </p>
+                  </>
+                )
 
-                <div className="rounded-lg border border-border bg-card p-6">
-                  <h2 className="text-xl font-semibold">Frequência recente</h2>
-                  <div className="mt-4 overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b border-border text-left text-muted-foreground">
-                          <th className="px-2 py-2">Data</th>
-                          <th className="px-2 py-2">Tipo</th>
-                          <th className="px-2 py-2">Membresia</th>
-                          <th className="px-2 py-2">Visitantes</th>
-                          <th className="px-2 py-2">Crianças</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {data.frequencia.map((item, index) => (
-                          <tr key={`${item.data}-${index}`} className="border-b border-border/60">
-                            <td className="px-2 py-2">{item.data || '-'}</td>
-                            <td className="px-2 py-2">{item.tipo || '-'}</td>
-                            <td className="px-2 py-2">{item.membresia || 0}</td>
-                            <td className="px-2 py-2">{item.visitantes || 0}</td>
-                            <td className="px-2 py-2">{item.criancas || 0}</td>
-                          </tr>
-                        ))}
-                        {data.frequencia.length === 0 && (
-                          <tr>
-                            <td className="px-2 py-3 text-muted-foreground" colSpan={5}>
-                              Sem dados de frequência.
-                            </td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
+                if (!isClickable) {
+                  return (
+                    <div key={tab.id} className={cardClass}>
+                      {content}
+                    </div>
+                  )
+                }
 
-              <div className="rounded-lg border border-border bg-card p-6">
-                <h2 className="text-xl font-semibold">Explorador de Tabelas</h2>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Abra cada tabela migrada para conferir os dados e validar a transição.
-                </p>
-
-                <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                  {data.tables.map((table) => (
-                    <Link
-                      key={table.tableName}
-                      href={`/igreja/tabela/${table.tableName}`}
-                      className="rounded-lg border border-border bg-background px-4 py-3 transition hover:border-primary"
-                    >
-                      <p className="text-sm font-medium">{table.tableName}</p>
-                      <p className="text-xs text-muted-foreground">
-                        ~ {table.rowEstimate} linhas
-                      </p>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
+                return (
+                  <Link
+                    key={tab.id}
+                    href={`/igreja/tabela/${encodeURIComponent(tab.tableName!)}`}
+                    className={`${cardClass} transition hover:border-primary`}
+                  >
+                    {content}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
         </div>
       </section>
 
