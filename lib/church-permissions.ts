@@ -15,6 +15,10 @@ export type ChurchTabAccess = ChurchTabConfig & {
   canView: boolean
 }
 
+export type ChurchFeatureAccess = {
+  canAddMusic: boolean
+}
+
 const PERM = {
   global: [
     'user_all',
@@ -480,6 +484,31 @@ function hasTabPermission(
   if (hasGlobalPermission(authorityRow)) return true
   if (tab.permissionColumns.length === 0) return true
   return hasAnyPermission(authorityRow, tab.permissionColumns)
+}
+
+function canAddMusicFeature(
+  authorityRow: ChurchAuthorityRow | null,
+  isAdmin: boolean
+) {
+  if (isAdmin) return true
+  if (!authorityRow) return false
+
+  return (
+    isTruthy(authorityRow.user_all) ||
+    isTruthy(authorityRow.manager_louvor) ||
+    isTruthy(authorityRow.coordenador_louvor)
+  )
+}
+
+export async function getChurchFeatureAccessForUser(
+  email?: string | null,
+  isAdmin = false
+): Promise<ChurchFeatureAccess> {
+  const authorityRow = await getChurchAuthorityByEmail(email)
+
+  return {
+    canAddMusic: canAddMusicFeature(authorityRow, isAdmin),
+  }
 }
 
 export async function getChurchTabsForUser(

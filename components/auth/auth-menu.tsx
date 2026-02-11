@@ -122,7 +122,10 @@ export function AuthMenu() {
             </p>
             <p className="text-xs text-muted-foreground">{me.user.email}</p>
             {me.canAccessChurch && (
-              <a href="/igreja" className="mt-3 block text-sm font-medium text-primary">
+              <a
+                href="/igreja"
+                className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white hover:bg-red-700"
+              >
                 Igreja
               </a>
             )}
