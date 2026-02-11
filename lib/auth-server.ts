@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { getAdminAuth } from '@/lib/firebase/admin'
-import { isUserAdmin } from '@/lib/db'
+import { getUserAccess } from '@/lib/db'
 
 export type ServerUser = {
   uid: string
@@ -37,9 +37,18 @@ export async function requireServerUser(redirectTo = '/') {
 
 export async function requireAdminUser() {
   const user = await requireServerUser()
-  const admin = await isUserAdmin(user.uid)
+  const access = await getUserAccess(user.uid)
 
-  if (!admin) redirect('/')
+  if (!access.isAdmin) redirect('/')
+
+  return user
+}
+
+export async function requireChurchUser(redirectTo = '/?openLogin=1') {
+  const user = await requireServerUser(redirectTo)
+  const access = await getUserAccess(user.uid)
+
+  if (!access.canAccessChurch) redirect('/')
 
   return user
 }

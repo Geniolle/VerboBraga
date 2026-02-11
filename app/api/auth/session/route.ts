@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getAdminAuth } from '@/lib/firebase/admin'
-import { db, ensureTables } from '@/lib/db'
+import { db, ensureTables, resolveChurchAccessByEmail } from '@/lib/db'
 
 const EXPIRES_IN = 1000 * 60 * 60 * 24 * 5
 
@@ -19,11 +19,23 @@ export async function POST(req: NextRequest) {
 
     if (db) {
       await ensureTables()
+      const churchAccess = await resolveChurchAccessByEmail(decoded.email ?? null)
+
       await db.query(
-        `INSERT INTO app_users (uid, email, role)
-         VALUES ($1, $2, 'user')
-         ON CONFLICT (uid) DO UPDATE SET email = EXCLUDED.email`,
-        [decoded.uid, decoded.email ?? null]
+        `
+          INSERT INTO app_users (uid, email, role, is_colaborador, is_membresia)
+          VALUES ($1, $2, 'user', $3, $4)
+          ON CONFLICT (uid) DO UPDATE SET
+            email = EXCLUDED.email,
+            is_colaborador = app_users.is_colaborador OR EXCLUDED.is_colaborador,
+            is_membresia = app_users.is_membresia OR EXCLUDED.is_membresia
+        `,
+        [
+          decoded.uid,
+          decoded.email ?? null,
+          churchAccess.isColaborador,
+          churchAccess.isMembresia,
+        ]
       )
     }
 

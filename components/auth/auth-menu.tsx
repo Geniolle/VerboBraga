@@ -16,10 +16,19 @@ type MeResponse = {
     picture?: string
   } | null
   isAdmin: boolean
+  isColaborador: boolean
+  isMembresia: boolean
+  canAccessChurch: boolean
 }
 
 export function AuthMenu() {
-  const [me, setMe] = useState<MeResponse>({ user: null, isAdmin: false })
+  const [me, setMe] = useState<MeResponse>({
+    user: null,
+    isAdmin: false,
+    isColaborador: false,
+    isMembresia: false,
+    canAccessChurch: false,
+  })
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -112,8 +121,13 @@ export function AuthMenu() {
               {me.user.name || 'Utilizador'}
             </p>
             <p className="text-xs text-muted-foreground">{me.user.email}</p>
+            {me.canAccessChurch && (
+              <a href="/igreja" className="mt-3 block text-sm font-medium text-primary">
+                Igreja
+              </a>
+            )}
             {me.isAdmin && (
-              <a href="/admin" className="mt-3 block text-sm font-medium text-primary">
+              <a href="/admin" className="mt-2 block text-sm font-medium text-primary">
                 Ir para Admin
               </a>
             )}

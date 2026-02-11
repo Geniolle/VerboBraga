@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const PROTECTED_PATHS = ['/centro-de-cura/formulario', '/admin']
+const PROTECTED_PATHS = ['/centro-de-cura/formulario', '/admin', '/igreja']
 
 export function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname
@@ -12,7 +12,12 @@ export function proxy(req: NextRequest) {
 
   if (!sessionCookie) {
     const url = new URL('/', req.url)
-    if (path === '/centro-de-cura/formulario' || path.startsWith('/centro-de-cura/formulario/')) {
+    if (
+      path === '/centro-de-cura/formulario' ||
+      path.startsWith('/centro-de-cura/formulario/') ||
+      path === '/igreja' ||
+      path.startsWith('/igreja/')
+    ) {
       url.searchParams.set('openLogin', '1')
     }
     return NextResponse.redirect(url)
@@ -22,5 +27,5 @@ export function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/centro-de-cura/formulario/:path*', '/admin/:path*'],
+  matcher: ['/centro-de-cura/formulario/:path*', '/admin/:path*', '/igreja/:path*'],
 }
