@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getAdminAuth } from '@/lib/firebase/admin'
-import { db, ensureTables, resolveChurchAccessByEmail } from '@/lib/db'
+import { upsertSessionUser } from '@/lib/db'
 
 const EXPIRES_IN = 1000 * 60 * 60 * 24 * 5
 
@@ -17,25 +17,12 @@ export async function POST(req: NextRequest) {
     })
     const decoded = await getAdminAuth().verifyIdToken(idToken)
 
-    if (db) {
-      await ensureTables()
-      const churchAccess = await resolveChurchAccessByEmail(decoded.email ?? null)
-
-      await db.query(
-        `
-          INSERT INTO app_users (uid, email, role, is_colaborador, is_membresia)
-          VALUES ($1, $2, 'user', $3, $4)
-          ON CONFLICT (uid) DO UPDATE SET
-            email = EXCLUDED.email,
-            is_colaborador = EXCLUDED.is_colaborador,
-            is_membresia = EXCLUDED.is_membresia
-        `,
-        [
-          decoded.uid,
-          decoded.email ?? null,
-          churchAccess.isColaborador,
-          churchAccess.isMembresia,
-        ]
+    try {
+      await upsertSessionUser(decoded.uid, decoded.email ?? null)
+    } catch {
+      return NextResponse.json(
+        { error: 'Falha ao sincronizar usuario na API interna' },
+        { status: 502 }
       )
     }
 

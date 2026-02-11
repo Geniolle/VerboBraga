@@ -5,7 +5,7 @@ import { getChurchFeatureAccessForUser } from '@/lib/church-permissions'
 
 export default async function IgrejaAdicionarMusicaPage() {
   const user = await requireChurchUser('/?openLogin=1')
-  const access = await getUserAccess(user.uid)
+  const access = await getUserAccess(user.uid, user.email ?? null)
   const featureAccess = await getChurchFeatureAccessForUser(user.email, access.isAdmin)
 
   if (!featureAccess.canAddMusic) {

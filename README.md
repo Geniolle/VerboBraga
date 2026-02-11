@@ -14,7 +14,14 @@ Configure no Railway:
 - `FIREBASE_PROJECT_ID`
 - `FIREBASE_CLIENT_EMAIL`
 - `FIREBASE_PRIVATE_KEY`
+- `INTERNAL_API_URL`
+- `INTERNAL_API_SHARED_SECRET`
+
+Configure na API Node (`/API/.env`):
+
 - `DATABASE_URL`
+- `INTERNAL_API_SHARED_SECRET`
+- `ALLOWED_ORIGINS`
 
 ### Como funciona
 
@@ -23,8 +30,25 @@ Configure no Railway:
 - Rotas protegidas por proxy + validacao server-side real.
 - Formulario do Centro de Cura so abre para usuario logado.
 - Envio do formulario so aceita request autenticada no servidor.
+- O site Next.js nao acessa mais o Postgres diretamente.
+- Fluxo seguro: `Site -> API Node (assinada com HMAC) -> Postgres`.
 - Admin so entra se `uid` tiver `role='admin'` no Postgres.
 - Area `Igreja` aparece no menu de perfil para quem tem permissoes de colaborador/membresia.
+
+## Rodando em desenvolvimento
+
+1. Suba a API:
+
+```bash
+cd ../API
+npm install
+npm run dev
+```
+
+2. No Next, configure:
+
+- `INTERNAL_API_URL=http://localhost:4000`
+- `INTERNAL_API_SHARED_SECRET=<mesmo segredo da API>`
 
 ### SQL para tornar um usuario admin
 

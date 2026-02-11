@@ -11,7 +11,7 @@ export default async function IgrejaTabelaPage({
   params: Promise<{ table: string }>
 }) {
   const user = await requireChurchUser('/?openLogin=1')
-  const access = await getUserAccess(user.uid)
+  const access = await getUserAccess(user.uid, user.email ?? null)
   const { table: rawTable } = await params
   const table = decodeURIComponent(rawTable)
 

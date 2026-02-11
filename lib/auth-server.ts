@@ -37,7 +37,7 @@ export async function requireServerUser(redirectTo = '/') {
 
 export async function requireAdminUser() {
   const user = await requireServerUser()
-  const access = await getUserAccess(user.uid)
+  const access = await getUserAccess(user.uid, user.email ?? null)
 
   if (!access.isAdmin) redirect('/')
 
@@ -46,7 +46,7 @@ export async function requireAdminUser() {
 
 export async function requireChurchUser(redirectTo = '/?openLogin=1') {
   const user = await requireServerUser(redirectTo)
-  const access = await getUserAccess(user.uid)
+  const access = await getUserAccess(user.uid, user.email ?? null)
 
   if (!access.canAccessChurch) redirect('/')
 

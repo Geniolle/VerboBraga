@@ -1,4 +1,8 @@
-import { db, ChurchAuthorityRow, getChurchAuthorityByEmail } from '@/lib/db'
+import {
+  ChurchAuthorityRow,
+  getChurchAuthorityByEmail,
+  listChurchDatabaseTables,
+} from '@/lib/db'
 
 export type ChurchTabConfig = {
   id: string
@@ -443,16 +447,7 @@ function getTabCandidates(tab: ChurchTabConfig) {
 }
 
 async function getDatabaseTables() {
-  if (!db) return []
-  const result = await db.query<{ table_name: string }>(
-    `
-      SELECT table_name
-      FROM information_schema.tables
-      WHERE table_schema = 'public'
-    `
-  )
-
-  return result.rows.map((row) => row.table_name)
+  return listChurchDatabaseTables()
 }
 
 function buildTableMap(tableNames: string[]) {
