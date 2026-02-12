@@ -22,7 +22,7 @@ export default async function IgrejaLayout({
           <div className="flex items-center gap-3">
             <Link
               href="/"
-              className="inline-flex items-center rounded-md border border-red-300 bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100"
+              className="inline-flex items-center rounded-md border border-blue-300 bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
             >
               ← Voltar
             </Link>
@@ -35,7 +35,7 @@ export default async function IgrejaLayout({
           <nav className="flex items-center gap-2 overflow-x-auto">
             <Link
               href="/igreja"
-              className="whitespace-nowrap rounded-md border border-red-300 bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100"
+              className="whitespace-nowrap rounded-md border border-blue-300 bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
             >
               Painel
             </Link>
@@ -43,7 +43,7 @@ export default async function IgrejaLayout({
             {featureAccess.canAddMusic && (
               <Link
                 href="/igreja/adicionar-musica"
-                className="whitespace-nowrap rounded-md bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700"
+                className="whitespace-nowrap rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
               >
                 Adicionar Música
               </Link>
