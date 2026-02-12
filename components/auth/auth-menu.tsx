@@ -124,7 +124,7 @@ export function AuthMenu() {
             {me.canAccessChurch && (
               <a
                 href="/igreja"
-                className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white hover:bg-red-700"
+                className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
               >
                 Igreja
               </a>
