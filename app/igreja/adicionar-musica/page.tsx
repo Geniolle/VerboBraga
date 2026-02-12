@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation'
 import { requireChurchUser } from '@/lib/auth-server'
-import { getUserAccess } from '@/lib/db'
+import { getUserAccess, listMusicRequests } from '@/lib/db'
 import { getChurchFeatureAccessForUser } from '@/lib/church-permissions'
+import { MusicRequestsPanel } from '@/components/igreja/music-requests-panel'
 
 export default async function IgrejaAdicionarMusicaPage() {
   const user = await requireChurchUser('/?openLogin=1')
@@ -12,23 +13,25 @@ export default async function IgrejaAdicionarMusicaPage() {
     redirect('/igreja')
   }
 
+  const requests = await listMusicRequests(120)
+
   return (
     <section className="py-6 md:py-8">
       <div className="container mx-auto space-y-6 px-4">
         <div className="rounded-lg border border-border bg-card p-6">
           <h1 className="text-2xl font-bold text-foreground">Adicionar Música</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Acesso liberado por permissão de <code>USER_ALL</code>, <code>MANAGER_LOUVOR</code>{' '}
-            ou <code>COORDENADOR_LOUVOR</code> na tabela <code>igreja_bp_autority</code>.
+            Acesso liberado por permissão de <code>manager_louvor</code>,{' '}
+            <code>coordenador_louvor</code> ou <code>colaborador_comunicacao</code> na tabela{' '}
+            <code>igreja_bp_autority</code>. Novos pedidos entram com status{' '}
+            <code>em_espera</code>.
           </p>
         </div>
 
-        <div className="rounded-lg border border-border bg-card p-6">
-          <p className="text-sm text-muted-foreground">
-            Próximo passo: eu posso montar aqui o formulário completo de cadastro para gravar no
-            Postgres (tabela de músicas) com validação e histórico.
-          </p>
-        </div>
+        <MusicRequestsPanel
+          initialRequests={requests}
+          canManageMusicMedia={featureAccess.canManageMusicMedia}
+        />
       </div>
     </section>
   )

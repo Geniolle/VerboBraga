@@ -21,6 +21,7 @@ export type ChurchTabAccess = ChurchTabConfig & {
 
 export type ChurchFeatureAccess = {
   canAddMusic: boolean
+  canManageMusicMedia: boolean
 }
 
 const PERM = {
@@ -489,9 +490,23 @@ function canAddMusicFeature(
   if (!authorityRow) return false
 
   return (
-    isTruthy(authorityRow.user_all) ||
     isTruthy(authorityRow.manager_louvor) ||
-    isTruthy(authorityRow.coordenador_louvor)
+    isTruthy(authorityRow.coordenador_louvor) ||
+    isTruthy(authorityRow.colaborador_comunicacao)
+  )
+}
+
+function canManageMusicMediaFeature(
+  authorityRow: ChurchAuthorityRow | null,
+  isAdmin: boolean
+) {
+  if (isAdmin) return true
+  if (!authorityRow) return false
+
+  return (
+    isTruthy(authorityRow.manager_comunicacao) ||
+    isTruthy(authorityRow.coordenador_comunicacao) ||
+    isTruthy(authorityRow.colaborador_comunicacao)
   )
 }
 
@@ -503,6 +518,7 @@ export async function getChurchFeatureAccessForUser(
 
   return {
     canAddMusic: canAddMusicFeature(authorityRow, isAdmin),
+    canManageMusicMedia: canManageMusicMediaFeature(authorityRow, isAdmin),
   }
 }
 

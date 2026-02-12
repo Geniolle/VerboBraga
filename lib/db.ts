@@ -35,6 +35,24 @@ export type CuraSubmissionPayload = {
   cura: string
 }
 
+export type MusicRequestStatus = 'em_espera' | 'concluido'
+
+export type MusicRequest = {
+  id: number
+  requested_by_uid: string
+  requested_by_email: string | null
+  musica: string
+  versao: string | null
+  url: string | null
+  letra: string | null
+  status: MusicRequestStatus
+  completed_by_uid: string | null
+  completed_by_email: string | null
+  completed_at: string | null
+  created_at: string
+  updated_at: string
+}
+
 function emptyAccess(uid: string): UserAccess {
   return {
     uid,
@@ -130,4 +148,59 @@ export async function createCuraSubmission(
       ...payload,
     },
   })
+}
+
+export async function listMusicRequests(limit = 100) {
+  const query = new URLSearchParams({ limit: String(limit) })
+  const response = await internalApiRequest<{ requests: MusicRequest[] }>(
+    `/v1/music/requests?${query.toString()}`
+  )
+
+  return response.requests
+}
+
+export async function createMusicRequest(
+  user: { uid: string; email?: string | null },
+  payload: {
+    musica: string
+    versao?: string | null
+    url?: string | null
+    letra?: string | null
+  }
+) {
+  const response = await internalApiRequest<{ request: MusicRequest | null }>(
+    '/v1/music/requests',
+    {
+      method: 'POST',
+      body: {
+        uid: user.uid,
+        email: user.email ?? null,
+        musica: payload.musica,
+        versao: payload.versao ?? null,
+        url: payload.url ?? null,
+        letra: payload.letra ?? null,
+      },
+    }
+  )
+
+  return response.request
+}
+
+export async function markMusicRequestAsCompleted(
+  id: number,
+  user: { uid: string; email?: string | null }
+) {
+  const response = await internalApiRequest<{ request: MusicRequest | null }>(
+    `/v1/music/requests/${id}/status`,
+    {
+      method: 'PATCH',
+      body: {
+        uid: user.uid,
+        email: user.email ?? null,
+        status: 'concluido',
+      },
+    }
+  )
+
+  return response.request
 }

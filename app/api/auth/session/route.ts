@@ -19,7 +19,8 @@ export async function POST(req: NextRequest) {
 
     try {
       await upsertSessionUser(decoded.uid, decoded.email ?? null)
-    } catch {
+    } catch (error) {
+      console.error('Falha ao sincronizar usuario na API interna', error)
       return NextResponse.json(
         { error: 'Falha ao sincronizar usuario na API interna' },
         { status: 502 }

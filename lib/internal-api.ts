@@ -97,7 +97,9 @@ export async function internalApiRequest<T>(
   const timeout = setTimeout(() => controller.abort(), timeoutMs)
 
   try {
-    const response = await fetch(new URL(path, baseUrl), {
+    const targetUrl = new URL(path, baseUrl)
+
+    const response = await fetch(targetUrl, {
       method,
       cache: 'no-store',
       signal: controller.signal,
@@ -119,7 +121,10 @@ export async function internalApiRequest<T>(
           ? String(parsed.error)
           : `Erro da API interna (${response.status})`
 
-      throw new InternalApiError(message, response.status)
+      throw new InternalApiError(
+        `${message} [${method.toUpperCase()} ${targetUrl.toString()}]`,
+        response.status
+      )
     }
 
     return parsed as T
@@ -130,6 +135,13 @@ export async function internalApiRequest<T>(
 
     if (error instanceof Error && error.name === 'AbortError') {
       throw new InternalApiError('Timeout ao chamar API interna', 504)
+    }
+
+    if (error instanceof Error) {
+      throw new InternalApiError(
+        `Falha ao chamar API interna [${method.toUpperCase()} ${path}]: ${error.message}`,
+        502
+      )
     }
 
     throw error
