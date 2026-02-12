@@ -33,9 +33,11 @@ function formatDate(date: string) {
 export function MusicRequestsPanel({
   initialRequests,
   canManageMusicMedia,
+  canDeletePendingMusic,
 }: {
   initialRequests: MusicRequest[]
   canManageMusicMedia: boolean
+  canDeletePendingMusic: boolean
 }) {
   const [requests, setRequests] = useState<MusicRequest[]>(initialRequests)
   const [loading, setLoading] = useState(false)
@@ -123,6 +125,26 @@ export function MusicRequestsPanel({
       await reload()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Falha ao concluir pedido')
+    }
+  }
+
+  async function deletePending(id: number) {
+    setError('')
+
+    try {
+      const res = await fetch(`/api/igreja/musicas/${id}`, {
+        method: 'DELETE',
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data?.error || 'Falha ao deletar pedido')
+      }
+
+      await reload()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Falha ao deletar pedido')
     }
   }
 
@@ -214,6 +236,12 @@ export function MusicRequestsPanel({
             Somente a equipe de mídia pode marcar um pedido como <code>concluido</code>.
           </p>
         )}
+        {!canDeletePendingMusic && (
+          <p className="mt-2 text-sm text-muted-foreground">
+            Somente <code>manager_louvor</code> ou <code>coordenador_louvor</code> pode deletar
+            pedido em <code>em_espera</code>.
+          </p>
+        )}
 
         <div className="mt-4 overflow-x-auto">
           <table className="min-w-full text-sm">
@@ -267,16 +295,32 @@ export function MusicRequestsPanel({
                     {formatDate(request.created_at)}
                   </td>
                   <td className="px-3 py-2">
-                    {canManageMusicMedia && request.status === 'em_espera' ? (
-                      <button
-                        onClick={() => conclude(request.id)}
-                        className="rounded-lg border border-border px-3 py-1 text-xs font-semibold hover:border-primary"
-                      >
-                        Marcar concluido
-                      </button>
-                    ) : (
-                      <span className="text-xs text-muted-foreground">-</span>
-                    )}
+                    <div className="flex flex-wrap items-center gap-2">
+                      {canManageMusicMedia && request.status === 'em_espera' && (
+                        <button
+                          onClick={() => conclude(request.id)}
+                          className="rounded-lg border border-border px-3 py-1 text-xs font-semibold hover:border-primary"
+                        >
+                          Marcar concluido
+                        </button>
+                      )}
+                      {canDeletePendingMusic && request.status === 'em_espera' && (
+                        <button
+                          onClick={() => deletePending(request.id)}
+                          className="rounded-lg border border-red-300 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 hover:bg-red-100"
+                        >
+                          Deletar
+                        </button>
+                      )}
+                      {!canManageMusicMedia &&
+                        !canDeletePendingMusic &&
+                        request.status === 'em_espera' && (
+                          <span className="text-xs text-muted-foreground">-</span>
+                        )}
+                      {request.status !== 'em_espera' && (
+                        <span className="text-xs text-muted-foreground">-</span>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

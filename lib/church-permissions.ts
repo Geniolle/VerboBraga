@@ -22,6 +22,7 @@ export type ChurchTabAccess = ChurchTabConfig & {
 export type ChurchFeatureAccess = {
   canAddMusic: boolean
   canManageMusicMedia: boolean
+  canDeletePendingMusic: boolean
 }
 
 const PERM = {
@@ -510,6 +511,15 @@ function canManageMusicMediaFeature(
   )
 }
 
+function canDeletePendingMusicFeature(authorityRow: ChurchAuthorityRow | null) {
+  if (!authorityRow) return false
+
+  return (
+    isTruthy(authorityRow.manager_louvor) ||
+    isTruthy(authorityRow.coordenador_louvor)
+  )
+}
+
 export async function getChurchFeatureAccessForUser(
   email?: string | null,
   isAdmin = false
@@ -519,6 +529,7 @@ export async function getChurchFeatureAccessForUser(
   return {
     canAddMusic: canAddMusicFeature(authorityRow, isAdmin),
     canManageMusicMedia: canManageMusicMediaFeature(authorityRow, isAdmin),
+    canDeletePendingMusic: canDeletePendingMusicFeature(authorityRow),
   }
 }
 

@@ -31,6 +31,7 @@ export default async function IgrejaAdicionarMusicaPage() {
         <MusicRequestsPanel
           initialRequests={requests}
           canManageMusicMedia={featureAccess.canManageMusicMedia}
+          canDeletePendingMusic={featureAccess.canDeletePendingMusic}
         />
       </div>
     </section>

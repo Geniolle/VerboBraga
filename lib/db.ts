@@ -204,3 +204,21 @@ export async function markMusicRequestAsCompleted(
 
   return response.request
 }
+
+export async function deletePendingMusicRequest(
+  id: number,
+  user: { uid: string; email?: string | null }
+) {
+  const response = await internalApiRequest<{ ok: boolean }>(
+    `/v1/music/requests/${id}`,
+    {
+      method: 'DELETE',
+      body: {
+        uid: user.uid,
+        email: user.email ?? null,
+      },
+    }
+  )
+
+  return response.ok
+}
