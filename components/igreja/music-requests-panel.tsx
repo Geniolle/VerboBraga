@@ -23,11 +23,44 @@ function formatStatus(status: MusicRequest['status']) {
 }
 
 function formatDate(date: string) {
+  const parsed = parseDate(date)
+  if (parsed) {
+    return parsed.toLocaleString('pt-PT')
+  }
+
   try {
     return new Date(date).toLocaleString('pt-PT')
   } catch {
     return date
   }
+}
+
+function parseDate(value: string | null | undefined) {
+  if (!value) return null
+  const raw = String(value).trim()
+  if (!raw) return null
+
+  const native = new Date(raw)
+  if (!Number.isNaN(native.getTime())) {
+    return native
+  }
+
+  const match = raw.match(
+    /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/
+  )
+  if (!match) return null
+
+  const [, day, month, year, hour = '0', minute = '0', second = '0'] = match
+  const parsed = new Date(
+    Number(year),
+    Number(month) - 1,
+    Number(day),
+    Number(hour),
+    Number(minute),
+    Number(second)
+  )
+
+  return Number.isNaN(parsed.getTime()) ? null : parsed
 }
 
 export function MusicRequestsPanel({
@@ -54,6 +87,28 @@ export function MusicRequestsPanel({
     () => requests.filter((item) => item.status === 'em_espera').length,
     [requests]
   )
+
+  const sortedRequests = useMemo(() => {
+    return [...requests].sort((a, b) => {
+      const aPendingRank = a.status === 'em_espera' ? 0 : 1
+      const bPendingRank = b.status === 'em_espera' ? 0 : 1
+
+      if (aPendingRank !== bPendingRank) {
+        return aPendingRank - bPendingRank
+      }
+
+      const aDate = parseDate(a.created_at)
+      const bDate = parseDate(b.created_at)
+      const aTime = aDate?.getTime()
+      const bTime = bDate?.getTime()
+
+      if (aTime === undefined && bTime === undefined) return 0
+      if (aTime === undefined) return 1
+      if (bTime === undefined) return -1
+
+      return bTime - aTime
+    })
+  }, [requests])
 
   async function reload() {
     setLoading(true)
@@ -250,12 +305,12 @@ export function MusicRequestsPanel({
                 <th className="px-3 py-2">Versão</th>
                 <th className="px-3 py-2">Status</th>
                 <th className="px-3 py-2">Pedido por</th>
-                <th className="px-3 py-2">Criado em</th>
+                <th className="px-3 py-2">Criação em</th>
                 <th className="px-3 py-2">Ações</th>
               </tr>
             </thead>
             <tbody>
-              {requests.map((request) => (
+              {sortedRequests.map((request) => (
                 <tr key={request.id} className="border-b border-border/60 align-top">
                   <td className="px-3 py-2">
                     <p className="font-medium text-foreground">{request.musica}</p>
