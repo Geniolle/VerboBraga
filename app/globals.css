@@ -116,7 +116,13 @@ body {
 .google-login-button {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(125deg, #9a3412 0%, #ea580c 55%, #fdba74 100%);
+  background: linear-gradient(
+    125deg,
+    #1d4ed8 0%,
+    #2563eb 25%,
+    #f97316 60%,
+    #fb923c 100%
+  );
 }
 
 .google-login-button::before {
@@ -133,6 +139,6 @@ body {
     rgba(255, 255, 255, 0)
   );
   transform: translateX(-180%) skewX(-20deg);
-  animation: google-orange-shine 3.6s ease-in-out infinite;
+  animation: google-orange-shine 2.7s ease-in-out infinite;
   pointer-events: none;
 }
