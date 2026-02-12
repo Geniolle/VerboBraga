@@ -164,9 +164,31 @@ export function AuthMenu() {
             type="button"
             onClick={loginWithGoogle}
             disabled={loading}
-            className="w-full rounded-lg border border-border px-3 py-2 text-sm font-medium"
+            className="w-full rounded-lg bg-[linear-gradient(120deg,#4285F4_0%,#34A853_35%,#FBBC05_70%,#EA4335_100%)] px-3 py-2 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-60"
           >
-            Entrar com Google
+            <span className="flex items-center justify-center gap-2">
+              <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white">
+                <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
+                  <path
+                    fill="#EA4335"
+                    d="M12 10.2v3.9h5.5c-.2 1.3-1.6 3.9-5.5 3.9-3.3 0-6-2.8-6-6.2s2.7-6.2 6-6.2c1.9 0 3.1.8 3.9 1.5l2.7-2.6C17 2.9 14.7 2 12 2 6.9 2 2.8 6.2 2.8 11.3S6.9 20.6 12 20.6c5.3 0 8.8-3.7 8.8-8.9 0-.6-.1-1.1-.2-1.5H12z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M3.9 7.2l3.2 2.3C7.9 7.5 9.8 6 12 6c1.9 0 3.1.8 3.9 1.5l2.7-2.6C17 2.9 14.7 2 12 2 8.5 2 5.5 4 3.9 7.2z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M12 20.6c2.6 0 4.8-.9 6.4-2.4l-3-2.4c-.8.6-1.9 1-3.4 1-2.6 0-4.9-1.8-5.7-4.2L3 15.2c1.6 3.2 4.9 5.4 9 5.4z"
+                  />
+                  <path
+                    fill="#4285F4"
+                    d="M20.8 11.7c0-.6-.1-1.1-.2-1.5H12v3.9h5.5c-.3 1.4-1.1 2.5-2.1 3.2l3 2.4c1.8-1.7 2.8-4.2 2.8-8z"
+                  />
+                </svg>
+              </span>
+              Entrar com Google
+            </span>
           </button>
 
           {error && <p className="mt-3 text-xs text-red-600">{error}</p>}
