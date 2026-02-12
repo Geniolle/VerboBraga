@@ -97,3 +97,42 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes google-orange-shine {
+  0%,
+  70% {
+    transform: translateX(-180%) skewX(-20deg);
+    opacity: 0;
+  }
+  78% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: translateX(260%) skewX(-20deg);
+    opacity: 0;
+  }
+}
+
+.google-login-button {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(125deg, #9a3412 0%, #ea580c 55%, #fdba74 100%);
+}
+
+.google-login-button::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: -35%;
+  width: 40%;
+  height: 140%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.5),
+    rgba(255, 255, 255, 0)
+  );
+  transform: translateX(-180%) skewX(-20deg);
+  animation: google-orange-shine 3.6s ease-in-out infinite;
+  pointer-events: none;
+}

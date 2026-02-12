@@ -138,7 +138,7 @@ export function AuthMenu() {
               type="button"
               disabled={loading}
               onClick={logout}
-              className="mt-4 w-full rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground"
+              className="mt-4 w-full rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white hover:bg-red-700"
             >
               Logout
             </button>
@@ -164,7 +164,7 @@ export function AuthMenu() {
             type="button"
             onClick={loginWithGoogle}
             disabled={loading}
-            className="w-full rounded-lg bg-[linear-gradient(120deg,#4285F4_0%,#34A853_35%,#FBBC05_70%,#EA4335_100%)] px-3 py-2 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-60"
+            className="google-login-button w-full rounded-lg px-3 py-2 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-60"
           >
             <span className="flex items-center justify-center gap-2">
               <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white">
