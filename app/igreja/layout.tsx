@@ -17,25 +17,25 @@ export default async function IgrejaLayout({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
-      <header className="sticky top-0 z-50 border-b border-red-800 bg-red-700 text-white">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/95 text-foreground backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto flex flex-col gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
             <Link
               href="/"
-              className="inline-flex items-center rounded-md border border-white/40 px-3 py-1.5 text-sm font-medium hover:bg-white/10"
+              className="inline-flex items-center rounded-md border border-red-300 bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100"
             >
               ← Voltar
             </Link>
             <div>
               <p className="text-sm font-semibold">Igreja</p>
-              <p className="text-xs text-white/80">{user.email ?? ''}</p>
+              <p className="text-xs text-muted-foreground">{user.email ?? ''}</p>
             </div>
           </div>
 
           <nav className="flex items-center gap-2 overflow-x-auto">
             <Link
               href="/igreja"
-              className="whitespace-nowrap rounded-md border border-white/30 px-3 py-1.5 text-sm font-medium hover:bg-white/10"
+              className="whitespace-nowrap rounded-md border border-red-300 bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100"
             >
               Painel
             </Link>
@@ -43,7 +43,7 @@ export default async function IgrejaLayout({
             {featureAccess.canAddMusic && (
               <Link
                 href="/igreja/adicionar-musica"
-                className="whitespace-nowrap rounded-md border border-white/30 px-3 py-1.5 text-sm font-medium hover:bg-white/10"
+                className="whitespace-nowrap rounded-md bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700"
               >
                 Adicionar Música
               </Link>
