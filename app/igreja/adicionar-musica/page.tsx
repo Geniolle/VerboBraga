@@ -21,10 +21,7 @@ export default async function IgrejaAdicionarMusicaPage() {
         <div className="rounded-lg border border-border bg-card p-6">
           <h1 className="text-2xl font-bold text-foreground">Adicionar Música</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Acesso liberado por permissão de <code>manager_louvor</code>,{' '}
-            <code>coordenador_louvor</code> ou <code>colaborador_comunicacao</code> na tabela{' '}
-            <code>igreja_bp_autority</code>. Novos pedidos entram com status{' '}
-            <code>em_espera</code>.
+            Envie novas músicas para avaliação e acompanhamento da equipe.
           </p>
         </div>
 

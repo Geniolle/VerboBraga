@@ -153,7 +153,7 @@ export function MusicRequestsPanel({
       <div className="rounded-lg border border-border bg-card p-6">
         <h2 className="text-lg font-semibold text-foreground">Novo pedido de música</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Todo pedido novo entra com status <code>em_espera</code>.
+          Todo pedido novo é enviado para análise e acompanhamento.
         </p>
 
         <form onSubmit={onSubmit} className="mt-4 grid gap-4">
@@ -238,8 +238,7 @@ export function MusicRequestsPanel({
         )}
         {!canDeletePendingMusic && (
           <p className="mt-2 text-sm text-muted-foreground">
-            Somente <code>manager_louvor</code> ou <code>coordenador_louvor</code> pode deletar
-            pedido em <code>em_espera</code>.
+            Apenas a liderança do louvor pode remover pedidos pendentes.
           </p>
         )}
 
